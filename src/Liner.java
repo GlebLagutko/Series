@@ -4,7 +4,7 @@ public class Liner extends Series {
     }
 
     @Override
-    double solve(int j) {
+    double getElement(int j) {
         return first + j * step;
     }
 

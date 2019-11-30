@@ -43,12 +43,12 @@ public abstract class Series {
         this.n = n;
     }
 
-    abstract double solve(int j);
+    abstract double getElement(int j);
 
     double sum() {
         double sum = 0;
         for (int i = 0; i < n; i++)
-            sum += solve(i);
+            sum += getElement(i);
         return sum;
     }
 
@@ -56,11 +56,11 @@ public abstract class Series {
     public String toString() {
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < n; i++)
-            s.append(solve(i) + " ");
+            s.append(getElement(i) + " ");
         return s.toString();
     }
 
-    void save(String filename) throws IOException {
+    void save(String filename)  {
         try (PrintWriter wr = new PrintWriter(new File(filename))) {
             wr.println(this.toString());
         } catch (IOException e) {

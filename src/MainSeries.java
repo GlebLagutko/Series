@@ -5,14 +5,16 @@ import java.awt.event.ComponentEvent;
 public class MainSeries {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            SeriesWindows seriesWindows = createWindow();
-            seriesWindows.setVisible(true);
+          SeriesWindows seriesWindows = createWindow();
+          seriesWindows.setVisible(true);
         });
+
     }
 
     private static SeriesWindows createWindow() {
         SeriesWindows seriesWindows = new SeriesWindows();
         seriesWindows.setSize(300, 200);
+        seriesWindows.setResizable(false );
 
         seriesWindows.addComponentListener(new ComponentAdapter() {
             @Override

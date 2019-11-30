@@ -17,6 +17,7 @@ public class EditJDialog extends JDialog {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
         setVisible(true);
+        setModal(true);
         this.q = q;
         Container container = this.getContentPane();
         container.setLayout(new GridLayout(4, 2));

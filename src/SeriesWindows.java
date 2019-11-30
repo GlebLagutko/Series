@@ -1,17 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 
 public class SeriesWindows extends JFrame {
     private JTextField inputFileName;
     private JRadioButton exp;
     private JRadioButton lin;
-    Exponential expSeries;
-    Liner linSeries;
+    private Series s;
 
     public SeriesWindows() {
-        this.expSeries = new Exponential(0, 0, 0);
-        this.linSeries = new Liner(0, 0, 0);
+        s = new Exponential(0, 0, 0);
     }
 
     @Override
@@ -20,19 +17,17 @@ public class SeriesWindows extends JFrame {
         JRootPane pane = new JRootPane();
         pane.setContentPane(panel);
         panel.setLayout(new GridLayout(4, 2));
-        exp = new JRadioButton("exp");
-        lin = new JRadioButton("Liner");
+        exp = createRadioButton("Exp");
+        lin = createRadioButton("Liner");
         ButtonGroup switchSeries = new ButtonGroup();
         switchSeries.add(exp);
         switchSeries.add(lin);
         JButton toFile = createWriteButton();
         JButton showN = createButtonShowN();
         JButton editButton = createEditButton();
-        JLabel lFileName = new JLabel(" File Name : ");
-        toFile.setBackground(Color.GREEN);
-        showN.setBackground(Color.ORANGE);
-        editButton.setBackground(Color.RED);
-        inputFileName = new JTextField();
+        JLabel lFileName = new JLabel(" File Name  ");
+
+        inputFileName = new JTextField("output.txt");
         panel.add(lFileName);
         panel.add(inputFileName);
         panel.add(exp);
@@ -45,14 +40,19 @@ public class SeriesWindows extends JFrame {
         return pane;
     }
 
+
+    private JRadioButton createRadioButton(String exp) {
+        JRadioButton button = new JRadioButton(exp);
+        button.addActionListener(e -> {
+            s = getSeries(s.getN(), s.getStep(), s.getFirst());
+        });
+        return button;
+    }
+
     private JButton createButtonShowN() {
         JButton button = new JButton("showN");
         button.addActionListener(e -> {
-            if (exp.isSelected()) {
-                showNElements(expSeries);
-            } else {
-                showNElements(linSeries);
-            }
+            showNElements(s);
         });
         return button;
     }
@@ -64,7 +64,7 @@ public class SeriesWindows extends JFrame {
     private JButton createEditButton() {
         JButton edit = new JButton("Edit");
         edit.addActionListener(e -> {
-            new EditJDialog(this, "Edit", exp.isSelected() ? expSeries : linSeries);
+            new EditJDialog(this, "Edit", s).setModal(true);
         });
         return edit;
     }
@@ -73,25 +73,17 @@ public class SeriesWindows extends JFrame {
         JButton writeFile = new JButton("WriteToFile");
         writeFile.addActionListener(e -> {
             String filename = inputFileName.getText();
-            if (exp.isSelected()) {
-                try {
-                    writeAnswerInFile(expSeries, filename);
-
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            } else {
-                try {
-                    writeAnswerInFile(linSeries, filename);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-            }
+            writeAnswerInFile(s, filename);
         });
         return writeFile;
     }
 
-    protected void writeAnswerInFile(Series s, String filename) throws IOException {
+    private Series getSeries(int n, double step, double first) {
+        return exp.isSelected() ? new Exponential(first, step, n) : new Liner(first, step, n);
+    }
+
+
+    protected void writeAnswerInFile(Series s, String filename) {
         s.save(filename);
     }
 }
